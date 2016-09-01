@@ -11,7 +11,7 @@ import java.util.Random;
 
 class MyAgentState
 {
-	public int[][] world = new int[30][30];
+	public int[][] world = new int[20][20];
 	public int initialized = 0;
 	final int UNKNOWN 	= 0;
 	final int WALL 		= 1;
@@ -26,7 +26,12 @@ class MyAgentState
 	
 	public int agent_x_position = 1;
 	public int agent_y_position = 1;
+	
+	public int agent_x_start = 0;
+	public int agent_y_start = 0;
+	
 	public int agent_last_action = ACTION_NONE;
+	public int agent_last_turn = ACTION_NONE;
 	
 	public static final int NORTH = 0;
 	public static final int EAST = 1;
@@ -81,7 +86,7 @@ class MyAgentState
 				if (world[j][i]==UNKNOWN)
 					System.out.print(" ? ");
 				if (world[j][i]==WALL)
-					System.out.print(" # ");
+					System.out.print("# ");
 				if (world[j][i]==CLEAR)
 					System.out.print(" . ");
 				if (world[j][i]==DIRT)
@@ -98,7 +103,7 @@ class MyAgentProgram implements AgentProgram {
 
 	private int initnialRandomActions = 10;
 	private Random random_generator = new Random();
-	
+	public Boolean first_bump = false;
 	// Here you can define your variables!
 	public int iterationCounter = 10;
 	public MyAgentState state = new MyAgentState();
@@ -146,12 +151,14 @@ class MyAgentProgram implements AgentProgram {
     	    	
     	System.out.println("x=" + state.agent_x_position);
     	System.out.println("y=" + state.agent_y_position);
+    	System.out.println("x_s=" + state.agent_x_start);
+    	System.out.println("y_s=" + state.agent_y_start);
     	System.out.println("dir=" + state.agent_direction);
     	
 		
 	    iterationCounter--;
 	    
-	    if (iterationCounter==0)
+	    if (iterationCounter+1000==0)
 	    	return NoOpAction.NO_OP;
 
 	    DynamicPercept p = (DynamicPercept) percept;
@@ -195,16 +202,82 @@ class MyAgentProgram implements AgentProgram {
 	    } 
 	    else
 	    {
-	    	if (bump)
-	    	{
-	    		state.agent_last_action=state.ACTION_NONE;
-		    	return NoOpAction.NO_OP;
-	    	}
-	    	else
-	    	{
-	    		state.agent_last_action=state.ACTION_MOVE_FORWARD;
-	    		return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
-	    	}
+            if (bump)
+            {
+                state.agent_last_action=state.ACTION_TURN_LEFT;
+                state.agent_last_turn=state.ACTION_TURN_LEFT;
+                state.agent_direction = ((((state.agent_direction-1) % 4) + 4) % 4);
+                if(!first_bump){
+        			state.agent_x_start = state.agent_x_position;
+        			state.agent_y_start = state.agent_y_position;
+                    first_bump = true;
+                }
+                return LIUVacuumEnvironment.ACTION_TURN_LEFT;
+            }
+            else
+            {
+            	if(state.agent_x_position == state.agent_x_start &&
+            			state.agent_y_position == state.agent_y_start){
+            			
+            			
+            			int ww = 100, ew = 0, nw = 100, sw = 0;
+            			
+            			for(int i = 0; i < state.world.length; ++i ){
+            				for(int j = 0; j < state.world[0].length; ++j){
+            					
+            					if(state.world[i][j] == 1){
+            						if(i < ww)
+            							ww = i;
+            						if(i > ew)
+            							ew = i;
+            						if(j < nw)
+            							nw = j;
+            						if(j > sw)
+            							sw = j;
+            					}
+            					
+            				}
+            			}
+            		
+            			int WALL_width = Math.abs(ww-ew);
+            			int WALL_hight = Math.abs(nw-sw);
+            			
+            			System.out.println("WEST WALL x-led = " + ww);
+            			System.out.println("EAST WALL x-led = " + ew);
+            			System.out.println("N WALL y-led = " + nw);
+            			System.out.println("S WALL y-led = " + sw);
+            			
+            			System.out.println("WALL Width = " + WALL_width);
+            			System.out.println("WALL hight = " + WALL_hight);
+            			
+            			if(WALL_width > 3 && WALL_hight > 3){
+            			
+            			System.out.println("HITTAT HELA KONTUREN AV BANAN");
+            			return NoOpAction.NO_OP;
+            			}
+            		
+            	}
+            	
+            	
+                if(state.agent_last_action == state.ACTION_TURN_LEFT){
+                    System.out.println("Last LEFT, Now FORWARD");
+                    state.agent_last_action=state.ACTION_MOVE_FORWARD;
+                    return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
+                }
+                else if(state.agent_last_turn==state.ACTION_TURN_LEFT ||
+                		(state.agent_last_action==state.ACTION_MOVE_FORWARD && first_bump)){
+                    System.out.println("Right undiscoverd, Go right");
+                    state.agent_direction  = ((((state.agent_direction+1) % 4) + 4) % 4);
+                    state.agent_last_turn=state.ACTION_TURN_RIGHT;
+                    state.agent_last_action=state.ACTION_TURN_RIGHT;
+                    return LIUVacuumEnvironment.ACTION_TURN_RIGHT;
+                }
+                else{
+                    System.out.println("Move Forward");
+                    state.agent_last_action=state.ACTION_MOVE_FORWARD;
+                    return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
+                }
+            }
 	    }
 	}
 }
