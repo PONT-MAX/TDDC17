@@ -136,8 +136,37 @@ class MyAgentProgram implements AgentProgram {
 		return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
 	}
 
-	private void contour_finder()
+	private Action find_unknown()
+	{
+		//Todo
+		return NoOpAction.NO_OP;
+	}
+
+	private Action find_home()
+	{
+		//Todo
+		return NoOpAction.NO_OP;
+	}
+
+
+	private Action find_wall(Boolean bump)
 		{
+			if (bump)
+			{
+				state.agent_last_action=state.ACTION_TURN_LEFT;
+				state.agent_last_turn=state.ACTION_TURN_LEFT;
+				state.agent_direction = ((((state.agent_direction-1) % 4) + 4) % 4); //Fix direction
+				
+				//Finds a wall and starts navigating around the map with this as the start position.
+				if(!first_bump){ 
+					state.agent_x_start = state.agent_x_position;
+					state.agent_y_start = state.agent_y_position;
+					first_bump = true;
+				} 
+
+				return LIUVacuumEnvironment.ACTION_TURN_LEFT;
+			}
+
 			//Finds contours of the map.
 
 			int ww = 100, ew = 0, nw = 100, sw = 0;
@@ -173,6 +202,32 @@ class MyAgentProgram implements AgentProgram {
 
 				System.out.println("HITTAT HELA KONTUREN AV BANAN");
 				state.AI_STATE++;
+			}
+
+			if(state.AI_STATE == state.FIND_WALL){
+				if(state.agent_last_action == state.ACTION_TURN_LEFT){
+					System.out.println("Last LEFT, Now FORWARD");
+					state.agent_last_action=state.ACTION_MOVE_FORWARD;
+					return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
+				}
+				else if(state.agent_last_turn==state.ACTION_TURN_LEFT ||
+						(state.agent_last_action==state.ACTION_MOVE_FORWARD && first_bump)){
+					System.out.println("Right undiscoverd, Go right");
+					state.agent_direction  = ((((state.agent_direction+1) % 4) + 4) % 4);
+					state.agent_last_turn=state.ACTION_TURN_RIGHT;
+					state.agent_last_action=state.ACTION_TURN_RIGHT;
+					return LIUVacuumEnvironment.ACTION_TURN_RIGHT;
+				}
+				else{
+					System.out.println("Move Forward");
+					state.agent_last_action=state.ACTION_MOVE_FORWARD;
+					return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
+				}
+			}
+			else
+			{
+				System.out.println("ERR9");
+				return find_unknown();
 			}
 		}
 
@@ -247,58 +302,23 @@ class MyAgentProgram implements AgentProgram {
 		} 
 		else
 		{
-			if (bump)
-			{
-				state.agent_last_action=state.ACTION_TURN_LEFT;
-				state.agent_last_turn=state.ACTION_TURN_LEFT;
-				state.agent_direction = ((((state.agent_direction-1) % 4) + 4) % 4);
-				
-				if(!first_bump){
-					state.agent_x_start = state.agent_x_position;
-					state.agent_y_start = state.agent_y_position;
-					first_bump = true;
-				}
-				return LIUVacuumEnvironment.ACTION_TURN_LEFT;
-			}
-			else
-			{
-				if(state.AI_STATE == state.FIND_WALL){
+			if(state.AI_STATE == state.FIND_WALL){
 					if(state.agent_x_position == state.agent_x_start &&
 							state.agent_y_position == state.agent_y_start){
-						contour_finder();
-					}
-
-					if(state.AI_STATE == 0){
-						if(state.agent_last_action == state.ACTION_TURN_LEFT){
-							System.out.println("Last LEFT, Now FORWARD");
-							state.agent_last_action=state.ACTION_MOVE_FORWARD;
-							return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
-						}
-						else if(state.agent_last_turn==state.ACTION_TURN_LEFT ||
-								(state.agent_last_action==state.ACTION_MOVE_FORWARD && first_bump)){
-							System.out.println("Right undiscoverd, Go right");
-							state.agent_direction  = ((((state.agent_direction+1) % 4) + 4) % 4);
-							state.agent_last_turn=state.ACTION_TURN_RIGHT;
-							state.agent_last_action=state.ACTION_TURN_RIGHT;
-							return LIUVacuumEnvironment.ACTION_TURN_RIGHT;
-						}
-						else{
-							System.out.println("Move Forward");
-							state.agent_last_action=state.ACTION_MOVE_FORWARD;
-							return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
-						}
+						return find_wall(bump);
 					}
 				}
-				if(state.AI_STATE == state.FIND_UNKNOWN){
-					
-					//Sök kod
-					
-					return NoOpAction.NO_OP;
+				else if (state.AI_STATE == state.FIND_UNKNOWN){
+					System.out.println("ERR1");
+					return find_unknown();
+				}
+				else if (state.AI_STATE == state.FIND_HOME){
+					return find_home();
 				}
 				else{
-					return NoOpAction.NO_OP;
+					System.out.println("Your algorithm is bad");
+					return NoOpAction.NO_OP;	
 				}
-			}
 		}
 	}
 }
