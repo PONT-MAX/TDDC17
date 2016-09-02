@@ -1,0 +1,77 @@
+
+import java.util.Vector;
+
+public Vector<int[2]> A_star(int[2] tile, int[2] target, double g){
+
+	
+	// The set of nodes already evaluated.
+    Vector<int[2]> closedSet;
+    
+    
+    // The set of currently discovered nodes still to be evaluated.
+    // Initially, only the start node is known.
+    Vector<int[2]> openSet;
+    int[2] current_pos = tile;
+    openSet.add(current_pos);
+    
+
+
+	Boolean done = false;
+	
+	while(!done){
+	
+		current_pos = find_best_F(openSet); 
+	
+	
+	}
+	
+	
+
+}
+
+
+public int cost_h(int[2] tile, int[2] target){
+
+	double dx = (double)(tile[0]-target[0]);
+	dx = dx*dx;
+	
+	double dy = (double)(tile[1]-target[1]);
+	dx = dy*dy;
+	
+	return = (int)(Math.sqrt( dx + dy );
+	
+
+}
+
+
+public int get_tile_info(MyAgentState agent, String direction){
+	
+	int checkup_dir;
+	if(direction == "RIGHT")
+		checkup_dir = 1;
+	if(direction == "LEFT")
+		checkup_dir = -1;
+	
+	
+	int x_pos = agent.agent_x_position;
+	int y_pos = agent.agent_y_position;
+	
+	
+	int dir = agent.agent_direction;
+	
+	int look_up_dir  = ((((dir+checkup_dir) % 4) + 4) % 4);
+	
+	if(look_up_dir == 0){
+		return agent.world[x_pos][y_pos-1];
+	}
+	if(look_up_dir == 1){
+		return agent.world[x_pos+1][y_pos];
+	}
+	if(look_up_dir == 2){
+		return agent.world[x_pos][y_pos+1];
+	}
+	if(look_up_dir == 3){
+		return agent.world[x_pos-1][y_pos];
+	}
+		
+}
