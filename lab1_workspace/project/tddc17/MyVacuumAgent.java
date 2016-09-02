@@ -167,9 +167,9 @@ class MyAgentProgram implements AgentProgram {
 			System.out.println("S WALL y-led = " + sw);
 
 			System.out.println("WALL Width = " + WALL_width);
-			System.out.println("WALL hight = " + height);
+			System.out.println("WALL hight = " + WALL_height);
 
-			if(WALL_width > 3 && height > 3){
+			if(WALL_width > 3 && WALL_height > 3){
 
 				System.out.println("HITTAT HELA KONTUREN AV BANAN");
 				state.AI_STATE++;
