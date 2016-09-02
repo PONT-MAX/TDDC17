@@ -112,7 +112,8 @@ class MyAgentProgram implements AgentProgram {
 	// Here you can define your variables!
 	public int iterationCounter = 10;
 	public MyAgentState state = new MyAgentState();
-
+	public int WALL_width = 0;
+	public int WALL_height = 0;
 	// moves the Agent to a random start position
 	// uses percepts to update the Agent position - only the position, other percepts are ignored
 	// returns a random action
@@ -135,6 +136,45 @@ class MyAgentProgram implements AgentProgram {
 		return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
 	}
 
+	private void contour_finder()
+		{
+			//Finds contours of the map.
+
+			int ww = 100, ew = 0, nw = 100, sw = 0;
+
+			for(int i = 0; i < state.world.length; ++i ){
+				for(int j = 0; j < state.world[0].length; ++j){
+
+					if(state.world[i][j] == 1){
+						if(i < ww)
+							ww = i;
+						if(i > ew)
+							ew = i;
+						if(j < nw)
+							nw = j;
+						if(j > sw)
+							sw = j;
+					}
+				}
+			}
+
+			WALL_width = Math.abs(ww-ew);
+			WALL_height = Math.abs(nw-sw);
+
+			System.out.println("WEST WALL x-led = " + ww);
+			System.out.println("EAST WALL x-led = " + ew);
+			System.out.println("N WALL y-led = " + nw);
+			System.out.println("S WALL y-led = " + sw);
+
+			System.out.println("WALL Width = " + WALL_width);
+			System.out.println("WALL hight = " + height);
+
+			if(WALL_width > 3 && height > 3){
+
+				System.out.println("HITTAT HELA KONTUREN AV BANAN");
+				state.AI_STATE++;
+			}
+		}
 
 	@Override
 	public Action execute(Percept percept) {
@@ -212,6 +252,7 @@ class MyAgentProgram implements AgentProgram {
 				state.agent_last_action=state.ACTION_TURN_LEFT;
 				state.agent_last_turn=state.ACTION_TURN_LEFT;
 				state.agent_direction = ((((state.agent_direction-1) % 4) + 4) % 4);
+				
 				if(!first_bump){
 					state.agent_x_start = state.agent_x_position;
 					state.agent_y_start = state.agent_y_position;
@@ -224,45 +265,7 @@ class MyAgentProgram implements AgentProgram {
 				if(state.AI_STATE == state.FIND_WALL){
 					if(state.agent_x_position == state.agent_x_start &&
 							state.agent_y_position == state.agent_y_start){
-
-
-						int ww = 100, ew = 0, nw = 100, sw = 0;
-
-						for(int i = 0; i < state.world.length; ++i ){
-							for(int j = 0; j < state.world[0].length; ++j){
-
-								if(state.world[i][j] == 1){
-									if(i < ww)
-										ww = i;
-									if(i > ew)
-										ew = i;
-									if(j < nw)
-										nw = j;
-									if(j > sw)
-										sw = j;
-								}
-
-							}
-						}
-
-						int WALL_width = Math.abs(ww-ew);
-						int WALL_hight = Math.abs(nw-sw);
-
-						System.out.println("WEST WALL x-led = " + ww);
-						System.out.println("EAST WALL x-led = " + ew);
-						System.out.println("N WALL y-led = " + nw);
-						System.out.println("S WALL y-led = " + sw);
-
-						System.out.println("WALL Width = " + WALL_width);
-						System.out.println("WALL hight = " + WALL_hight);
-
-						if(WALL_width > 3 && WALL_hight > 3){
-
-							System.out.println("HITTAT HELA KONTUREN AV BANAN");
-							state.AI_STATE++;
-							//return NoOpAction.NO_OP;
-						}
-
+						contour_finder();
 					}
 
 					if(state.AI_STATE == 0){
