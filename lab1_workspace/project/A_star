@@ -1,33 +1,84 @@
 
 import java.util.Vector;
 
-public Vector<int[2]> A_star(int[2] tile, int[2] target, double g){
+public Vector<int[2]> A_star(int[2] tile, int[2] target){
 
 	
 	// The set of nodes already evaluated.
-    Vector<int[2]> closedSet;
+    Vector<Vector<int[2]>> explored;
     
     
     // The set of currently discovered nodes still to be evaluated.
-    // Initially, only the start node is known.
-    Vector<int[2]> openSet;
-    int[2] current_pos = tile;
-    openSet.add(current_pos);
+    // Initially, only the start node is known. Ordered by f
+    Vector<Vector<int[2]>> frontier;
+    Vector<int[2]> node;
+    node.add(tile);
     
 
-
-	Boolean done = false;
+	Vector<int[2]> children;
+	int[2] child_pos;
 	
-	while(!done){
+	while(true){
 	
-		current_pos = find_best_F(openSet); 
-	
+		if(frontier.empty()){
+			Vector<int[2]> failure;
+			return failure;
+		}
+		
+		
+		//Pop frointier (Choose node w/ lowest f)
+		node = frontier.remove(0); 
+		
+		//Reached goal
+		if(sameTile(node[0],target))
+			return node;
+		
+		explored.add(node);
+		children.clear();
+		child_pos = node(0); 
+		child_pos[0]++;
+		children.add(child_pos);
+		child_pos[0] = child_pos[0] -2;
+		children.add(child_pos);
+		
+		child_pos[0]++;
+		child_pos[1]++;
+		children.add(child_pos);
+		child_pos[1] = child_pos[1] -2;
+		children.add(child_pos);
+		
+		
+		for(i = 0;i<4;++i){
+			
+		
+		}
+		
+		
 	
 	}
 	
 	
 
 }
+
+public int[2] find_best_f(Vector<int[2]> v){
+
+	Iterator i = v.iterator();
+	while(i.hasNext()){
+	i.next()
+	}
+
+}
+
+public Boolean sameTile(int[2] a, int[2] b){
+
+	if(a[0] == b[0] && a[1] == b[1])
+		return true;
+	
+	return false;
+
+}
+
 
 
 public int cost_h(int[2] tile, int[2] target){
