@@ -50,6 +50,17 @@ public Vector<int[2]> A_star(int[2] tile, int[2] target){
 		
 		for(i = 0;i<4;++i){
 			
+			if(tile_clear(state.world,children[i]){
+				System.out.println("Path! " + children[i]);
+				if( !child_exist(frontier,explored,children[i]) ){
+					System.out.println("Insert children in frontier");
+					insert_child_frontier(children[i],frontier);
+					}
+				else if( child_in_frontier(children[i],frontier)){
+				 	System.out.println("In frontier, replaced old node");
+				 	
+			}
+			
 		
 		}
 		
@@ -79,17 +90,25 @@ public Boolean sameTile(int[2] a, int[2] b){
 
 }
 
+public Boolean tile_clear(int[][] world,int[2] pos){
+		
+		if(world[pos[0][pos[1] > 1)
+			return true;
+			
+		return false;
+		
+}
+
 
 
 public int cost_h(int[2] tile, int[2] target){
 
-	double dx = (double)(tile[0]-target[0]);
-	dx = dx*dx;
+	int dx = Math.abs(tile[0]-target[0]);
 	
-	double dy = (double)(tile[1]-target[1]);
-	dx = dy*dy;
+	int dy = Math.abs(tile[1]-target[1]);
 	
-	return = (int)(Math.sqrt( dx + dy );
+	
+	return = dx + dy;
 	
 
 }
