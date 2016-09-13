@@ -19,9 +19,10 @@ public class CustomGraphSearch implements SearchObject {
 
 	/**
 	 * The constructor tells graph search whether it should insert nodes to front or back of the frontier 
+	 * The same as whether or not we should have a queue or stack <-> FIFO or LIFO <-> DFS or BFS
 	 */
     public CustomGraphSearch(boolean bInsertFront) {
-		insertFront = bInsertFront;
+	insertFront = bInsertFront;
     }
 
 	/**
@@ -39,10 +40,36 @@ public class CustomGraphSearch implements SearchObject {
 
 		// Path will be empty until we find the goal.
 		path = new ArrayList<SearchNode>();
-		
-		// Implement this!
-		System.out.println("Implement CustomGraphSearch.java!");
-		
+
+		// The current node.
+		SearchNode node;
+
+		while (true) {
+		    // If the frontier is empty something bad has happened.
+		    if (frontier.isEmpty())
+			{	
+			    System.out.println("Nothing found!");
+			    return frontier.toList();
+			}
+		    
+		    //Always take first element.
+		    node = frontier.removeFirst(); 
+		    explored.add(node);
+		    
+		    //create_valid_child(); //Disregard bad ones i.e. walls
+		    
+		    // for each child in node do
+		    // Check if child in frontier
+		    //		 if (insertFront){
+		    //		     frontier.addNodeToFront(...)
+		    //			 }
+		    //		 else {
+		    //		     frontier.addNodeToBack(...)
+		    //}
+			
+		    //asdf;
+		    break; //Remove...!
+		}
 		
 		/* Some hints:
 		 * -Read early part of chapter 3 in the book!
