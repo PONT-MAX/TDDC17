@@ -6,21 +6,28 @@
   (:objects
    city1 city2 city3          ;; there are three cities,
    truck1 truck2 truck3       ;; one truck in each city,
+   bigtruck1 bigtruck2 bigtruck3 ;; one bigtruck in each city,
    airplane1                  ;; only one airplane,
    train1		      ;; only one train,
    office1 office2 office3    ;; offices are "non-airport" locations
    airport1 airport2 	      ;; airports
    station1 station3	      ;; train stations
    packet1 packet2            ;; two packages to be delivered
+   bigpacket1 bigpacket2      ;; two big packages to be delivered
    )
   (:init
    ;; Type declarations:
-   (object packet1) (object packet2)
+   (object packet1)
+   (bigobject bigpacket1)
 
    ;; all vehicles must be declared as both "vehicle" and their
    ;; appropriate subtype,
-   (vehicle truck1) (vehicle truck2) (vehicle truck3) (vehicle airplane1) (vehicle train1) 
-   (truck truck1) (truck truck2) (truck truck3) (airplane airplane1) (train train1)
+   (vehicle truck1) (vehicle truck2) (vehicle truck3)
+   (vehicle bigtruck1) (vehicle bigtruck2) (vehicle bigtruck3)
+   (vehicle airplane1) (vehicle train1)
+   (truck truck1) (truck truck2) (truck truck3)
+   (bigtruck bigtruck1) (bigtruck bigtruck2) (bigtruck bigtruck3)
+   (airplane airplane1) (train train1)
 
    ;; likewise, airports must be declared both as "location" and as
    ;; the subtype "airport",
@@ -39,14 +46,17 @@
    ;; The actual initial state of the problem, which specifies the
    ;; initial locations of all packages and all vehicles:
    (at packet1 office1)
-   (at packet2 office3)
+   (at bigpacket1 office1)
    (at truck1 airport1)
    (at truck2 airport2)
-   (at truck3 office3)
+   (at truck3 station3)
+   (at bigtruck1 airport1)
+   (at bigtruck2 airport2)
+   (at bigtruck3 station3)
    (at airplane1 airport1)
    (at train1 station1)
    )
 
   ;; The goal is to have both packages delivered to their destinations:
-  (:goal (and (at packet1 office2) (at packet2 office2)))
+  (:goal (and (at packet1 office2) (at bigpacket1 office3)))
   )
