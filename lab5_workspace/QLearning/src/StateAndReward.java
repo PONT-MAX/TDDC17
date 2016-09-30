@@ -1,12 +1,40 @@
 public class StateAndReward {
+	
 
 	
-	/* State discretization function for the angle controller */
 	public static String getStateAngle(double angle, double vx, double vy) {
-
+		
+		double M_PI = 3.141592653;
+		String state;
 		/* TODO: IMPLEMENT THIS FUNCTION */
-
-		String state = "OneStateToRuleThemAll";
+		if(angle < 0){
+			if(angle > -M_PI/6.0)
+				state = "l1";
+			else if(angle > -M_PI*2.0/6.0)
+				state = "l2";
+			else if(angle > -M_PI*3.0/6.0)
+				state = "l3";
+			else if(angle > -M_PI*4.0/6.0)
+				state = "l4";
+			else if(angle > -M_PI*5.0/6.0)
+				state = "l5";
+			else	
+				state = "l6";
+		}
+		else{
+			if(angle > M_PI/6.0)
+				state = "r1";
+			else if(angle > M_PI*2.0/6.0)
+				state = "r2";
+			else if(angle > M_PI*3.0/6.0)
+				state = "r3";
+			else if(angle > M_PI*4.0/6.0)
+				state = "r4";
+			else if(angle > M_PI*5.0/6.0)
+				state = "r5";
+			else	
+				state = "r6";
+		}
 		
 		return state;
 	}
@@ -55,7 +83,7 @@ public class StateAndReward {
 	// not handle values lower than min and higher than max.
 	// ///////////////////////////////////////////////////////////
 	public static int discretize(double value, int nrValues, double min,
-			double max) {
+									double max) {
 		if (nrValues < 2) {
 			return 0;
 		}
