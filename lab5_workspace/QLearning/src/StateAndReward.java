@@ -22,20 +22,22 @@ public class StateAndReward {
 				state = "l6";
 		}
 		else{
-			if(angle > M_PI/6.0)
+			if(angle < M_PI/6.0)
 				state = "r1";
-			else if(angle > M_PI*2.0/6.0)
+			else if(angle < M_PI*2.0/6.0)
 				state = "r2";
-			else if(angle > M_PI*3.0/6.0)
+			else if(angle < M_PI*3.0/6.0)
 				state = "r3";
-			else if(angle > M_PI*4.0/6.0)
+			else if(angle < M_PI*4.0/6.0)
 				state = "r4";
-			else if(angle > M_PI*5.0/6.0)
+			else if(angle < M_PI*5.0/6.0)
 				state = "r5";
 			else	
 				state = "r6";
 		}
-		
+		System.out.println("angle: " + angle);	
+		System.out.println("r2 angle: " + M_PI*2.0/6.0);	
+		System.out.println("state: " + state);	
 		return state;
 	}
 
@@ -43,7 +45,7 @@ public class StateAndReward {
 	public static double getRewardAngle(double angle, double vx, double vy) {
 
 		/* TODO: IMPLEMENT THIS FUNCTION */
-		
+		//Update the Q table for this state with an appropriate reward...?	
 		double reward = 0;
 
 		return reward;
