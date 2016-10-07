@@ -132,36 +132,24 @@ public class QLearningController extends Controller {
 	/* Performs the chosen action */
 	void performAction(int action) {
 
-		/* Fire zeh rockets! */
-		/* TODO: Remember to change NUM_ACTIONS constant to reflect the number of actions (including 0, no action) */
-		
-		/* TODO: IMPLEMENT THIS FUNCTION */
-		
-		//ACTION_NONE = 0;
-		//ACTION_LEFT = 1;
-		//ACTION_RIGHT = 2;
-		//ACTION_RIGHT_DOUBLE = 3;
-		//ACTION_LEFT_DOUBLE = 4;
-		//ACTION_CENTER = 5;
-		//ACTION_ALL = 6;
-		
-		if(action == 0)
+		if(action == ACTION_NONE)
 			resetRockets();
-		else if(action == 1)
+		else if(action == ACTION_LEFT)
 			fireLeftRocket();
-		else if(action == 2)
+		else if(action == ACTION_RIGHT)
 			fireRightRocket();
-		else if(action == 3)
+		else if(action == ACTION_RIGHT_DOUBLE)
 			fire2RightRockets();
-		else if(action == 4)
+		else if(action == ACTION_LEFT_DOUBLE)
 			fire2LeftRockets();
-		else if(action == 5)
+		else if(action == ACTION_CENTER)
 			fireMiddleRocket();
-		else if(action == 6)
+		else if(action == ACTION_ALL)
 			fireAllRockets();
-		
-		
-		
+		else{ 
+			resetRockets();
+			System.out.println("ELSE IN PERFORMACE BAD");
+		}
 	}
 
 	/* Main decision loop. Called every iteration by the simulator */
@@ -202,19 +190,19 @@ public class QLearningController extends Controller {
 				
 				/* See top for constants and below for helper functions */
 				
-				//DoubleFeature x; /* Positions */
-				//DoubleFeature y;
-				//DoubleFeature vx; /* Velocities */
-				//DoubleFeature vy;
-				//DoubleFeature angle; /* Angle */
+				double V = Ntable.get(prev_stateaction);
+				double Qmax = getMaxActionQValue(new_state);
+				double Qprev = Qtable.get(prev_stateaction);
+				double a = alpha(Ntable.get(prev_stateaction));
 				
-				//String previous_state = null;
-
+				double UpdateQ = (1-a)*Qprev + a*(previous_reward + GAMMA_DISCOUNT_FACTOR*Qmax);
 				
-				//leftEngine.setBursting(false);
-				//rightEngine.setBursting(false);
-				//middleEngine.setBursting(false);
+				//double UpdateQ = Qtable.get(prev_stateaction) + 
+					//	alpha(Ntable.get(prev_stateaction)) *(previous_reward 
+						//		+ GAMMA_DISCOUNT_FACTOR *getMaxActionQValue(new_state) 
+							//	- Qtable.get(prev_stateaction));
 				
+				Qtable.put(prev_stateaction, UpdateQ);
 				
 				int action = selectAction(new_state); /* Make sure you understand how it selects an action */
 
@@ -222,7 +210,7 @@ public class QLearningController extends Controller {
 				
 				/* Only print every 10th line to reduce spam */
 				print_counter++;
-				if (print_counter % 10 == 0) {
+				if (print_counter % 100 == 0) {
 					System.out.println("ITERATION: " + iteration + " SENSORS: a=" + df.format(angle.getValue()) + " vx=" + df.format(vx.getValue()) + 
 							" vy=" + df.format(vy.getValue()) + " P_STATE: " + previous_state + " P_ACTION: " + previous_action + 
 							" P_REWARD: " + df.format(previous_reward) + " P_QVAL: " + df.format(Qtable.get(prev_stateaction)) + " Tested: "
@@ -269,6 +257,7 @@ public class QLearningController extends Controller {
 	/* Selects an action in a state based on the registered Q-values and the exploration chance */
 	public int selectAction(String state) {
 		Random rand = new Random();
+		explore_chance =  0.75*(100000-Math.min(100000, iteration))/Math.max(100000, iteration) + 0.05; 
 
 		int action = 0;
 		/* May do exploratory move if in exploration mode */
