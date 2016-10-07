@@ -9,7 +9,7 @@ public class StateAndReward {
 		/* TODO: IMPLEMENT THIS FUNCTION */
 		if(angle < 0){
 			if(angle > -M_PI/6.0)
-				state = "l1";
+				state = "gl1";
 			else if(angle > -M_PI*2.0/6.0)
 				state = "l2";
 			else if(angle > -M_PI*3.0/6.0)
@@ -22,9 +22,15 @@ public class StateAndReward {
 				state = "l6";
 		}
 		else{
+<<<<<<< HEAD
+			if(angle > M_PI/6.0)
+				state = "gr1";
+			else if(angle > M_PI*2.0/6.0)
+=======
 			if(angle < M_PI/6.0)
 				state = "r1";
 			else if(angle < M_PI*2.0/6.0)
+>>>>>>> 00bbccffc3499d8048a46429dcc6c6e77b579f87
 				state = "r2";
 			else if(angle < M_PI*3.0/6.0)
 				state = "r3";
@@ -45,9 +51,44 @@ public class StateAndReward {
 	public static double getRewardAngle(double angle, double vx, double vy) {
 
 		/* TODO: IMPLEMENT THIS FUNCTION */
+<<<<<<< HEAD
+		double M_PI = 3.141592653;
+		double reward;
+		
+		if(angle < 0){
+			if(angle > -M_PI/6.0)
+				reward = 20;
+			else if(angle > -M_PI*2.0/6.0)
+				reward = 10;
+			else if(angle > -M_PI*3.0/6.0)
+				reward = 3;
+			else if(angle > -M_PI*4.0/6.0)
+				reward = 2;
+			else if(angle > -M_PI*5.0/6.0)
+				reward = 1;
+			else	
+				reward = 0;
+		}
+		else{
+			if(angle < M_PI/6.0)
+				reward = 20;
+			else if(angle < M_PI*2.0/6.0)
+				reward = 10;
+			else if(angle < M_PI*3.0/6.0)
+				reward = 3;
+			else if(angle < M_PI*4.0/6.0)
+				reward = 2;
+			else if(angle < M_PI*5.0/6.0)
+				reward = 1;
+			else	
+				reward = 0;
+		}
+		
+=======
 		//Update the Q table for this state with an appropriate reward...?	
 		double reward = 0;
 
+>>>>>>> 00bbccffc3499d8048a46429dcc6c6e77b579f87
 		return reward;
 	}
 

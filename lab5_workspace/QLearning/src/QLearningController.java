@@ -37,11 +37,14 @@ public class QLearningController extends Controller {
 	Hashtable<String, Double> Qtable = new Hashtable<String, Double>(); /* Contains the Q-values - the state-action utilities */
 	Hashtable<String, Integer> Ntable = new Hashtable<String, Integer>(); /* Keeps track of how many times each state-action combination has been used */
 
-	/* PARAMETERS OF THE LEARNING ALGORITHM - THESE MAY BE TUNED BUT THE DEFAULT VALUES OFTEN WORK REASONABLY WELL  */
+	/* PARAMETERS OF THE LEARNING ALGORITHM 
+	 * - THESE MAY BE TUNED BUT THE DEFAULT VALUES OFTEN WORK REASONABLY WELL  */
 	static final double GAMMA_DISCOUNT_FACTOR = 0.95; /* Must be < 1, small values make it very greedy */
-	static final double LEARNING_RATE_CONSTANT = 10; /* See alpha(), lower values are good for quick results in large and deterministic state spaces */
+	static final double LEARNING_RATE_CONSTANT = 10; /* See alpha(), lower values are good for quick results in 
+														large and deterministic state spaces */
 	double explore_chance = 0.5; /* The exploration chance during the exploration phase */
-	final static int REPEAT_ACTION_MAX = 30; /* Repeat selected action at most this many times trying reach a new state, without a max it could loop forever if the action cannot lead to a new state */
+	final static int REPEAT_ACTION_MAX = 30; /* Repeat selected action at most this many times trying reach a new state, 
+												without a max it could loop forever if the action cannot lead to a new state */
 
 	/* Some internal counters */
 	int iteration = 0; /* Keeps track of how many iterations the agent has run */
@@ -56,6 +59,14 @@ public class QLearningController extends Controller {
 	public SpringObject object;
 	ComposedSpringObject cso;
 	long lastPressedExplore = 0;
+	
+	public final int ACTION_NONE = 0;
+	public final int ACTION_LEFT = 1;
+	public final int ACTION_RIGHT = 2;
+	public final int ACTION_RIGHT_DOUBLE = 3;
+	public final int ACTION_LEFT_DOUBLE = 4;
+	public final int ACTION_CENTER = 5;
+	public final int ACTION_ALL = 6;
 
 	public void init() {
 		cso = (ComposedSpringObject) object;
@@ -81,6 +92,42 @@ public class QLearningController extends Controller {
 		rightEngine.setBursting(false);
 		middleEngine.setBursting(false);
 	}
+	
+	void fireAllRockets() {
+		leftEngine.setBursting(true);
+		rightEngine.setBursting(true);
+		middleEngine.setBursting(true);
+	}
+	
+	void fire2LeftRockets() {
+		leftEngine.setBursting(true);
+		rightEngine.setBursting(false);
+		middleEngine.setBursting(true);
+	}
+	
+	void fire2RightRockets() {
+		leftEngine.setBursting(false);
+		rightEngine.setBursting(true);
+		middleEngine.setBursting(true);
+	}
+	
+	void fireLeftRocket() {
+		leftEngine.setBursting(true);
+		rightEngine.setBursting(false);
+		middleEngine.setBursting(false);
+	}
+	
+	void fireRightRocket() {
+		leftEngine.setBursting(false);
+		rightEngine.setBursting(false);
+		middleEngine.setBursting(true);
+	}
+	
+	void fireMiddleRocket() {
+		leftEngine.setBursting(false);
+		rightEngine.setBursting(true);
+		middleEngine.setBursting(false);
+	}
 
 	/* Performs the chosen action */
 	void performAction(int action) {
@@ -89,6 +136,31 @@ public class QLearningController extends Controller {
 		/* TODO: Remember to change NUM_ACTIONS constant to reflect the number of actions (including 0, no action) */
 		
 		/* TODO: IMPLEMENT THIS FUNCTION */
+		
+		//ACTION_NONE = 0;
+		//ACTION_LEFT = 1;
+		//ACTION_RIGHT = 2;
+		//ACTION_RIGHT_DOUBLE = 3;
+		//ACTION_LEFT_DOUBLE = 4;
+		//ACTION_CENTER = 5;
+		//ACTION_ALL = 6;
+		
+		if(action == 0)
+			resetRockets();
+		else if(action == 1)
+			fireLeftRocket();
+		else if(action == 2)
+			fireRightRocket();
+		else if(action == 3)
+			fire2RightRockets();
+		else if(action == 4)
+			fire2LeftRockets();
+		else if(action == 5)
+			fireMiddleRocket();
+		else if(action == 6)
+			fireAllRockets();
+		
+		
 		
 	}
 
@@ -99,11 +171,13 @@ public class QLearningController extends Controller {
 		if (!paused) {
 			String new_state = StateAndReward.getStateAngle(angle.getValue(), vx.getValue(), vy.getValue());
 
-			/* Repeat the chosen action for a while, hoping to reach a new state. This is a trick to speed up learning on this problem. */
+			/* Repeat the chosen action for a while, hoping to reach a new state. 
+			 * This is a trick to speed up learning on this problem. */
 			action_counter++;
 			if (new_state.equals(previous_state) && action_counter < REPEAT_ACTION_MAX) {
 				return;
 			}
+			
 			double previous_reward = StateAndReward.getRewardAngle(previous_angle, previous_vx, previous_vy);
 			action_counter = 0;
 
@@ -127,6 +201,19 @@ public class QLearningController extends Controller {
 				/* TODO: IMPLEMENT Q-UPDATE HERE! */
 				
 				/* See top for constants and below for helper functions */
+				
+				//DoubleFeature x; /* Positions */
+				//DoubleFeature y;
+				//DoubleFeature vx; /* Velocities */
+				//DoubleFeature vy;
+				//DoubleFeature angle; /* Angle */
+				
+				//String previous_state = null;
+
+				
+				//leftEngine.setBursting(false);
+				//rightEngine.setBursting(false);
+				//middleEngine.setBursting(false);
 				
 				
 				int action = selectAction(new_state); /* Make sure you understand how it selects an action */
