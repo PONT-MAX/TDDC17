@@ -157,7 +157,8 @@ public class QLearningController extends Controller {
 		iteration++;
 		
 		if (!paused) {
-			String new_state = StateAndReward.getStateAngle(angle.getValue(), vx.getValue(), vy.getValue());
+			String new_state = StateAndReward.getStateAngle(angle.getValue(), vx.getValue(), vy.getValue()) +
+				StateAndReward.getStateHover(angle.getValue(), vx.getValue(), vy.getValue());
 
 			/* Repeat the chosen action for a while, hoping to reach a new state. 
 			 * This is a trick to speed up learning on this problem. */
@@ -166,7 +167,9 @@ public class QLearningController extends Controller {
 				return;
 			}
 			
-			double previous_reward = StateAndReward.getRewardAngle(previous_angle, previous_vx, previous_vy);
+			double previous_reward = StateAndReward.getRewardAngle(previous_angle, previous_vx, previous_vy) +
+				StateAndReward.getRewardHover(previous_angle, previous_vx, previous_vy);
+
 			action_counter = 0;
 
 			/* The agent is in a new state, do learning and action selection */

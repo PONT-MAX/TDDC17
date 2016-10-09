@@ -49,35 +49,35 @@ public class StateAndReward {
 		
 		if(angle < 0){
 			if(angle > -M_PI/12.0)
-				reward = 20;
+				reward = 30;
 			else if(angle > -M_PI/6.0)
-				reward = 10;
+				reward = 20;
 			else if(angle > -M_PI*2.0/6.0)
-				reward = 5;
+				reward = 10;
 			else if(angle > -M_PI*3.0/6.0)
-				reward = 0;
+				reward = 5;
 			else if(angle > -M_PI*4.0/6.0)
-				reward = -2;
+				reward = 2;
 			else if(angle > -M_PI*5.0/6.0)
-				reward = -5;
+				reward = 1;
 			else	
-				reward = -10;
+				reward = 0;
 		}
 		else{
 			if(angle < M_PI/12.0)
-				reward = 20;
+				reward = 30;
 			else if(angle < M_PI/6.0)
-				reward = 10;
+				reward = 20;
 			else if(angle < M_PI*2.0/6.0)
-				reward = 5;
+				reward = 10;
 			else if(angle < M_PI*3.0/6.0)
-				reward = 0;
+				reward = 5;
 			else if(angle < M_PI*4.0/6.0)
-				reward = -2;
+				reward = 2;
 			else if(angle < M_PI*5.0/6.0)
-				reward = -5;
+				reward = 1;
 			else	
-				reward = -10;
+				reward = 0;
 		}
 		
 
@@ -87,11 +87,25 @@ public class StateAndReward {
 	/* State discretization function for the full hover controller */
 	public static String getStateHover(double angle, double vx, double vy) {
 
+		String state;
 		/* TODO: IMPLEMENT THIS FUNCTION */
-
-		String state = "OneStateToRuleThemAll2";
-		
-		return state;
+		if(vy < 0){
+			if(vy > -0.5)
+				state = "u1";
+			else if(vy > -1)
+				state = "u2";
+			else
+				state = "u3";
+		}
+		else{
+			if(vy < 0.5)
+				state = "d1";
+			else if(vy < 1)
+				state = "d2";
+			else
+				state = "d3";
+		}
+		return state;	/* TODO: IMPLEMENT THIS FUNCTION */
 	}
 
 	/* Reward function for the full hover controller */
@@ -100,7 +114,34 @@ public class StateAndReward {
 		/* TODO: IMPLEMENT THIS FUNCTION */
 		
 		double reward = 0;
-
+		if(vy < 0){
+			if(vy > -0.5)
+				reward = 30;
+			else if(vy > -1)
+				reward = 20;
+			else if(vy > -2)
+				reward = 10;
+			else if(vy > -3)
+				reward = 5;
+			else if(vy > -5)
+				reward = 3;
+			else
+				reward  = -10;
+		}
+		else{
+			if(vy < 0.5)
+				reward = 30;
+			else if(vy < 1)
+				reward = 20;
+			else if(vy < 2)
+				reward = 10;
+			else if(vy < 3)
+				reward = 5;
+			else if(vy < 5)
+				reward = 3;
+			else
+				reward = -10;
+		}
 		return reward;
 	}
 
