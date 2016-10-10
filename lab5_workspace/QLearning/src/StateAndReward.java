@@ -94,16 +94,28 @@ public class StateAndReward {
 				state = "u1";
 			else if(vy > -1)
 				state = "u2";
-			else
+			else if(vy > -2)
 				state = "u3";
+			else if(vy > -3)
+				state = "u4";
+			else if(vy > -5)
+				state = "u5";
+			else
+				state = "u6";
 		}
 		else{
 			if(vy < 0.5)
 				state = "d1";
 			else if(vy < 1)
 				state = "d2";
-			else
+			else if(vy < 2)
 				state = "d3";
+			else if(vy < 3)
+				state = "d4";
+			else if(vy < 5)
+				state = "d5" ;
+			else
+				state = "d6";
 		}
 		return state;	/* TODO: IMPLEMENT THIS FUNCTION */
 	}

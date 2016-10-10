@@ -200,11 +200,6 @@ public class QLearningController extends Controller {
 				
 				double UpdateQ = (1-a)*Qprev + a*(previous_reward + GAMMA_DISCOUNT_FACTOR*Qmax);
 				
-				//double UpdateQ = Qtable.get(prev_stateaction) + 
-					//	alpha(Ntable.get(prev_stateaction)) *(previous_reward 
-						//		+ GAMMA_DISCOUNT_FACTOR *getMaxActionQValue(new_state) 
-							//	- Qtable.get(prev_stateaction));
-				
 				Qtable.put(prev_stateaction, UpdateQ);
 				
 				int action = selectAction(new_state); /* Make sure you understand how it selects an action */
